@@ -1,0 +1,59 @@
+version: "3.9"
+
+services:
+  mariadb:
+    image: mariadb:11
+    container_name: web-pos-mariadb
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: web_pos
+      MARIADB_USER: pos_user
+      MARIADB_PASSWORD: pos_password
+    ports:
+      - "3307:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./database/init:/docker-entrypoint-initdb.d
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: web-pos-backend
+    restart: always
+    depends_on:
+      - mariadb
+    environment:
+      PORT: 3000
+      DB_HOST: mariadb
+      DB_PORT: 3306
+      DB_NAME: web_pos
+      DB_USER: pos_user
+      DB_PASSWORD: pos_password
+      SESSION_SECRET: super-secret-pos
+      CORS_ORIGIN: http://localhost:8080
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: web-pos-frontend
+    restart: always
+    depends_on:
+      - backend
+    environment:
+      VITE_API_URL: http://localhost:3000/api
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+volumes:
+  mariadb_data:

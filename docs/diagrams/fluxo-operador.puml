@@ -1,0 +1,56 @@
+@startuml
+start
+
+:Carregar aplicação;
+:Exibir tela de login;
+
+repeat
+  :Informar credenciais;
+  if (Credenciais válidas?) then (Sim)
+    :Acessar sistema;
+    break
+  else (Não)
+    :Exibir erro de login;
+  endif
+repeat while (Tentar novamente?) is (Sim)
+
+:Buscar produtos;
+:Exibir produtos;
+
+repeat
+  :Selecionar categoria;
+  :Filtrar produtos;
+
+  if (Produto disponível?) then (Sim)
+    :Adicionar ao carrinho;
+  else (Não)
+    :Exibir indisponível;
+  endif
+repeat while (Adicionar mais itens?) is (Sim)
+
+:Alterar quantidade (+/-);
+:Visualizar carrinho;
+:Calcular total;
+
+repeat
+  :Selecionar pagamento;
+  if (Pagamento válido?) then (Sim)
+    break
+  else (Não)
+    :Corrigir pagamento;
+  endif
+repeat while (Tentar novamente?) is (Sim)
+
+repeat
+  :Finalizar pedido;
+  if (Sucesso?) then (Sim)
+    :Limpar carrinho;
+    :Exibir confirmação;
+    break
+  else (Não)
+    :Exibir erro;
+  endif
+repeat while (Tentar novamente?) is (Sim)
+
+stop
+@enduml

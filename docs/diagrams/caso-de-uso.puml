@@ -1,0 +1,25 @@
+@startuml
+left to right direction
+
+actor Operador
+actor Admin
+
+rectangle "WEB POS" {
+  Operador --> (Fazer login)
+  Operador --> (Selecionar categoria)
+  Operador --> (Visualizar produtos)
+  Operador --> (Adicionar item ao carrinho)
+  Operador --> (Remover item do carrinho)
+  Operador --> (Alterar quantidade)
+  Operador --> (Visualizar carrinho)
+  Operador --> (Visualizar total do pedido)
+  Operador --> (Selecionar forma de pagamento)
+  Operador --> (Finalizar pedido)
+
+  Admin --> (Fazer login)
+  Admin --> (Visualizar produtos)
+  Admin --> (Atualizar estoque)
+  Admin --> (Alterar disponibilidade)
+  Admin --> (Cancelar pedido)
+}
+@enduml

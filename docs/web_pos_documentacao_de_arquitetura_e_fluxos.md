@@ -11,6 +11,8 @@ Sistema de ponto de venda (POS) com dois perfis:
 
 ## 🏗️ Diagrama de Arquitetura
 
+![Diagrama de Arquitetura](./diagrams/arquitetura.svg)
+
 ```plantuml
 @startuml
 top to bottom direction
@@ -84,6 +86,8 @@ ApiClient --> ExternalServices
 
 ## 🎭 Diagrama de Caso de Uso
 
+![Diagrama de Caso de Uso](./diagrams/caso-de-uso.svg)
+
 ```plantuml
 @startuml
 left to right direction
@@ -115,6 +119,8 @@ rectangle "WEB POS" {
 ---
 
 ## 🔄 Fluxo do Operador
+
+![Fluxo do Operador](./diagrams/fluxo-operador.svg)
 
 ```plantuml
 @startuml
@@ -179,6 +185,8 @@ stop
 ---
 
 ## ⚙️ Fluxo do Admin
+
+![Fluxo do Admin](./diagrams/fluxo-admin.svg)
 
 ```plantuml
 @startuml

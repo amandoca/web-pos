@@ -1,0 +1,65 @@
+@startuml
+top to bottom direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype ortho
+
+actor Usuario
+
+package "Camada de Tela" as ScreenLayer {
+  component "Telas" as Screens
+  component "Componentes de UI" as UIComponents
+  component "Hooks de Tela" as ScreenHooks
+}
+
+package "Camada de Feature (Domínio + Estado de Servidor)" as FeatureLayer {
+  component "Hooks de Feature" as FeatureHooks
+  component "Regras de Negócio" as BusinessRules
+  component "Validações" as Validations
+  component "Gerenciador de Estado de Servidor\n(TanStack Query)" as TanStackQuery
+  component "Serviços da Feature" as FeatureServices
+}
+
+package "Camada de Application (Infraestrutura)" as ApplicationLayer {
+  component "Ações Técnicas" as Actions
+  component "Cliente de API" as ApiClient
+  component "Estado Global da Aplicação\n(Redux)" as ReduxStore
+  component "Orquestrador de Efeitos Colaterais\n(Redux Saga)" as ReduxSaga
+  component "Providers da Aplicação" as Providers
+  component "Configuração Global" as GlobalConfig
+}
+
+package "Sistemas Externos" as ExternalLayer {
+  component "API de Backend" as BackendApi
+  component "Armazenamento do Navegador" as BrowserStorage
+  component "Cookies" as Cookies
+  component "Serviços Externos / BFF" as ExternalServices
+}
+
+Usuario --> Screens
+
+Screens --> UIComponents
+Screens --> ScreenHooks
+ScreenHooks --> FeatureHooks
+
+FeatureHooks --> BusinessRules
+FeatureHooks --> Validations
+FeatureHooks --> TanStackQuery
+
+TanStackQuery --> FeatureServices
+FeatureServices --> Actions
+
+Providers --> ReduxStore
+Providers --> TanStackQuery
+Providers --> GlobalConfig
+
+ReduxStore ..> ReduxSaga : ações / escuta
+ReduxSaga --> Actions
+
+Actions --> ApiClient
+Actions --> BrowserStorage
+Actions --> Cookies
+
+ApiClient --> BackendApi
+ApiClient --> ExternalServices
+@enduml

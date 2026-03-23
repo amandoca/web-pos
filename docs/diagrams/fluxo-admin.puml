@@ -1,0 +1,112 @@
+@startuml
+title Fluxo do Admin
+
+skinparam DefaultFontName "Helvetica Neue"
+skinparam DefaultFontSize 13
+skinparam DefaultFontColor #2C2C2A
+skinparam ArrowColor #888780
+skinparam ArrowFontColor #5F5E5A
+skinparam ArrowFontSize 11
+skinparam ArrowThickness 1.2
+skinparam RoundCorner 6
+skinparam Shadowing false
+skinparam BackgroundColor #FFFFFF
+skinparam ActivityBorderThickness 1
+
+skinparam activity {
+  BackgroundColor #EEEDFE
+  BorderColor #534AB7
+  FontColor #3C3489
+  FontSize 13
+}
+
+skinparam activityDiamond {
+  BackgroundColor #F5F4FD
+  BorderColor #534AB7
+  FontColor #3C3489
+  FontSize 11
+}
+
+skinparam activityStart {
+  Color #B4B2A9
+}
+
+skinparam activityEnd {
+  Color #B4B2A9
+}
+
+start
+
+partition "Admin - Login" {
+  :Carregar aplicação;
+  :Exibir tela de login;
+
+  repeat
+    :Informar credenciais;
+    if (Credenciais válidas?) then (Sim)
+      #E1F5EE:Acessar sistema;
+      break
+    else (Não)
+      #FCEBEB:Exibir erro de login;
+    endif
+  repeat while (Tentar login novamente?) is (Sim)
+}
+
+partition "Admin - Gestão de Produtos" {
+  :Buscar produtos;
+  :Exibir produtos;
+  :Selecionar produto;
+  :Visualizar dados do produto;
+
+  if (Deseja atualizar estoque?) then (Sim)
+    repeat
+      :Alterar quantidade de estoque;
+      :Salvar alteração;
+      if (Estoque atualizado com sucesso?) then (Sim)
+        #EAF3DE:Exibir confirmação;
+        break
+      else (Não)
+        #FCEBEB:Exibir erro ao atualizar estoque;
+      endif
+    repeat while (Tentar salvar estoque novamente?) is (Sim)
+  else (Não)
+  endif
+
+  if (Deseja alterar disponibilidade?) then (Sim)
+    repeat
+      :Ativar/Desativar produto;
+      :Salvar alteração;
+      if (Disponibilidade alterada com sucesso?) then (Sim)
+        #EAF3DE:Exibir confirmação;
+        break
+      else (Não)
+        #FCEBEB:Exibir erro ao alterar disponibilidade;
+      endif
+    repeat while (Tentar salvar disponibilidade novamente?) is (Sim)
+  else (Não)
+  endif
+}
+
+partition "Admin - Cancelamento de Pedido" {
+  :Buscar pedidos;
+  :Exibir pedidos;
+  :Selecionar pedido;
+
+  if (Deseja cancelar pedido?) then (Sim)
+    repeat
+      :Confirmar cancelamento;
+      if (Cancelamento realizado com sucesso?) then (Sim)
+        :Atualizar status do pedido para cancelado;
+        :Restaurar estoque dos itens;
+        #EAF3DE:Exibir confirmação;
+        break
+      else (Não)
+        #FCEBEB:Exibir erro ao cancelar pedido;
+      endif
+    repeat while (Tentar cancelar novamente?) is (Sim)
+  else (Não)
+  endif
+}
+
+stop
+@enduml

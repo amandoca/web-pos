@@ -180,17 +180,6 @@ Ao cancelar um pedido:
 - o pedido deve ser marcado como cancelado
 - o estoque dos itens deve ser restaurado
 
-## RN-ADM-07 — Cancelamento de Pedido
-
-O administrador pode cancelar pedidos já finalizados.
-
-Regras:
-
-- Deve existir uma ação de cancelamento no pedido
-- Ao cancelar:
-  - o status do pedido deve ser atualizado para "cancelado"
-  - o estoque dos produtos deve ser reprocessado (incrementado)
-
 ---
 
 # 🛠️ RN-ADM — Administrador (Gestão)
@@ -253,6 +242,19 @@ Somente o administrador pode:
 - alterar estoque
 - alterar disponibilidade
 - editar produtos
+
+---
+
+## RN-ADM-07 — Cancelamento de Pedido
+
+O administrador pode cancelar pedidos já finalizados.
+
+Regras:
+
+- Deve existir uma ação de cancelamento no pedido
+- Ao cancelar:
+  - o status do pedido deve ser atualizado para "cancelado"
+  - o estoque dos produtos deve ser reprocessado (incrementado)
 
 ---
 

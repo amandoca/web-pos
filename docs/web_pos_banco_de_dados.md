@@ -1,7 +1,9 @@
 # 🧾 WEB POS — Banco de Dados (MariaDB)
 
 ## 🎯 Objetivo
+
 Estruturar um banco de dados simples, consistente e funcional para um sistema POS (Point of Sale), suportando:
+
 - autenticação de usuários
 - catálogo de produtos
 - tamanhos e adicionais
@@ -11,9 +13,11 @@ Estruturar um banco de dados simples, consistente e funcional para um sistema PO
 ---
 
 ## 👤 users
+
 Armazena usuários do sistema.
 
 Campos:
+
 - id
 - name
 - username
@@ -26,9 +30,11 @@ Campos:
 ---
 
 ## 📂 categories
+
 Categorias de produtos (sem "all", pois é filtro de UI).
 
 Campos:
+
 - id
 - name
 - created_at
@@ -36,9 +42,11 @@ Campos:
 ---
 
 ## 💳 payment_methods
+
 Lista fixa de formas de pagamento.
 
 Campos:
+
 - id
 - name
 - created_at
@@ -46,9 +54,11 @@ Campos:
 ---
 
 ## 🍔 products
+
 Produtos do sistema.
 
 Campos:
+
 - id
 - category_id
 - title
@@ -64,9 +74,11 @@ Campos:
 ---
 
 ## 📏 product_sizes
+
 Tamanhos de produto.
 
 Campos:
+
 - id
 - product_id
 - name (small | medium | large)
@@ -75,9 +87,11 @@ Campos:
 ---
 
 ## ➕ addons
+
 Adicionais disponíveis.
 
 Campos:
+
 - id
 - name
 - price
@@ -85,18 +99,22 @@ Campos:
 ---
 
 ## 🔗 product_addons
+
 Relaciona produtos com adicionais.
 
 Campos:
+
 - product_id
 - addon_id
 
 ---
 
 ## 🧾 orders
+
 Pedidos realizados.
 
 Campos:
+
 - id
 - user_id
 - payment_method_id
@@ -112,9 +130,11 @@ Campos:
 ---
 
 ## 📦 order_items
+
 Itens do pedido.
 
 Campos:
+
 - id
 - order_id
 - product_id
@@ -127,9 +147,11 @@ Campos:
 ---
 
 ## 🧩 order_item_addons
+
 Adicionais do item do pedido.
 
 Campos:
+
 - order_item_id
 - addon_id
 - addon_name

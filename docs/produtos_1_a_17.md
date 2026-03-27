@@ -82,5 +82,10 @@
     "title": "Cupcakes com Glacê",
     "description": "massa de baunilha, glacê cremoso, confeitos"
   },
+  {
+    "image": "/home/amanda/projeto-pessoal/sistema-pos-web/web-pos/frontend/public/images/product-17.jpg",
+    "title": "Hamburguer com Cheddar e Bacon",
+    "description": "pão brioche, carne bovina, cheddar cremoso, bacon e ovo"
+  }
 ]
 ```

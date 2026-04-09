@@ -58,6 +58,10 @@ function mapFirestoreDate(value: unknown): string | null {
   return null;
 }
 
+function isNullableFirestoreDate(value: unknown): boolean {
+  return value === null || mapFirestoreDate(value) !== null;
+}
+
 function createFirestoreTimestamp(value: string | null): Timestamp | null {
   if (!value) {
     return null;
@@ -168,7 +172,7 @@ function mapOrderDocumentData(
     typeof data.fee !== "number" ||
     typeof data.total !== "number" ||
     (data.canceledBy !== null && typeof data.canceledBy !== "number") ||
-    mapFirestoreDate(data.canceledAt) === null ||
+    !isNullableFirestoreDate(data.canceledAt) ||
     mapFirestoreDate(data.createdAt) === null ||
     mapFirestoreDate(data.updatedAt) === null ||
     !Array.isArray(data.items)

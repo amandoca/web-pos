@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
   buildCartSummary,
@@ -22,6 +22,7 @@ import { useProductSelection } from "../../features/operator/product-selection/h
 import { useFeedback } from "../../shared/hooks/useFeedback";
 
 const ORDER_IN_PROGRESS_LABEL = "Pedido em andamento";
+const BARCODE_AUTO_SUBMIT_DELAY_MS = 150;
 
 function normalizeBarcode(rawValue: string): string {
   return rawValue.replace(/\s+/g, "").trim();
@@ -64,6 +65,8 @@ export function useOperatorScreen() {
   const [productModalErrorMessage, setProductModalErrorMessage] = useState<
     string | null
   >(null);
+  // Evita que a mesma leitura do scanner USB dispare buscas duplicadas.
+  const lastSubmittedBarcodeRef = useRef("");
 
   const productSelection = useProductSelection({ product: selectedProduct });
   const { feedbackMessage, feedbackType, showFeedback } = useFeedback();
@@ -121,67 +124,126 @@ export function useOperatorScreen() {
   }
 
   // Busca o produto pelo código de barras e reaproveita o fluxo de seleção.
-  function handleSubmitBarcodeSearch() {
-    const normalizedBarcode = normalizeBarcode(barcodeValue);
+  const handleSearchProductByBarcode = useCallback(
+    function handleSearchProductByBarcode(barcode: string) {
+      const normalizedBarcode = normalizeBarcode(barcode);
 
-    if (!normalizedBarcode) {
-      showFeedback("Digite ou leia um código de barras.", "error");
-      return;
-    }
+      if (!normalizedBarcode) {
+        showFeedback("Digite ou leia um código de barras.", "error");
+        return false;
+      }
 
-    const matchedProduct = productsQuery.products.find(function findProduct(
-      product,
-    ) {
-      return normalizeBarcode(product.barcode ?? "") === normalizedBarcode;
-    });
+      // A leitura já processada limpa o campo para a próxima passada do leitor.
+      lastSubmittedBarcodeRef.current = normalizedBarcode;
+      setBarcodeValue("");
 
-    if (!matchedProduct) {
-      showFeedback("Produto não encontrado para o código informado.", "error");
-      return;
-    }
-
-    const matchedCategory = categoriesQuery.categories.find(
-      function findCategory(category) {
-        return category.id === matchedProduct.categoryId;
-      },
-    );
-
-    if (matchedCategory) {
-      setSelectedCategory(matchedCategory);
-    }
-
-    setBarcodeValue("");
-
-    if (requiresProductConfiguration(matchedProduct)) {
-      handleSelectProduct(matchedProduct);
-      showFeedback(
-        "Produto encontrado. Escolha as opções para continuar.",
-        "success",
-      );
-      return;
-    }
-
-    try {
-      const cartItemPayload = createAddCartItemPayload({
-        product: matchedProduct,
-        quantity: 1,
-        selectedAddons: [],
-        selectedSizeName: null,
-        totalPrice: matchedProduct.basePrice,
-        unitPrice: matchedProduct.basePrice,
+      const matchedProduct = productsQuery.products.find(function findProduct(
+        product,
+      ) {
+        return normalizeBarcode(product.barcode ?? "") === normalizedBarcode;
       });
 
-      cart.addItem(cartItemPayload);
-      showFeedback(`${matchedProduct.title} adicionado ao carrinho.`, "success");
-    } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Não foi possível adicionar o produto.";
+      if (!matchedProduct) {
+        showFeedback("Produto não encontrado para o código informado.", "error");
+        return false;
+      }
 
-      showFeedback(message, "error");
-    }
+      const matchedCategory = categoriesQuery.categories.find(
+        function findCategory(category) {
+          return category.id === matchedProduct.categoryId;
+        },
+      );
+
+      if (matchedCategory) {
+        setSelectedCategory(matchedCategory);
+      }
+
+      if (requiresProductConfiguration(matchedProduct)) {
+        handleSelectProduct(matchedProduct);
+        showFeedback(
+          "Produto encontrado. Escolha as opções para continuar.",
+          "success",
+        );
+        return true;
+      }
+
+      try {
+        const cartItemPayload = createAddCartItemPayload({
+          product: matchedProduct,
+          quantity: 1,
+          selectedAddons: [],
+          selectedSizeName: null,
+          totalPrice: matchedProduct.basePrice,
+          unitPrice: matchedProduct.basePrice,
+        });
+
+        cart.addItem(cartItemPayload);
+        showFeedback(
+          `${matchedProduct.title} adicionado ao carrinho.`,
+          "success",
+        );
+        return true;
+      } catch (error) {
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Não foi possível adicionar o produto.";
+
+        showFeedback(message, "error");
+        return false;
+      }
+    },
+    [cart, categoriesQuery.categories, productsQuery.products, showFeedback],
+  );
+
+  function handleSubmitBarcodeSearch() {
+    handleSearchProductByBarcode(barcodeValue);
   }
+
+  useEffect(
+    function resetLastSubmittedBarcodeWhenInputClears() {
+      if (barcodeValue) {
+        return;
+      }
+
+      // Campo vazio significa que a próxima leitura pode ser tratada como nova.
+      lastSubmittedBarcodeRef.current = "";
+    },
+    [barcodeValue],
+  );
+
+  useEffect(
+    function submitBarcodeReaderValueAutomatically() {
+      const normalizedBarcode = normalizeBarcode(barcodeValue);
+      const hasPendingBarcode = Boolean(normalizedBarcode);
+      const hasBarcodeAlreadySubmitted =
+        lastSubmittedBarcodeRef.current === normalizedBarcode;
+
+      if (
+        !hasPendingBarcode ||
+        hasBarcodeAlreadySubmitted ||
+        isProductModalOpen ||
+        productsQuery.isLoading
+      ) {
+        return;
+      }
+
+      // Dá um pequeno intervalo para o leitor terminar de "digitar" o código.
+      const autoSubmitTimeout = window.setTimeout(function submitBarcode() {
+        handleSearchProductByBarcode(barcodeValue);
+      }, BARCODE_AUTO_SUBMIT_DELAY_MS);
+
+      return function cleanupAutoSubmitTimeout() {
+        window.clearTimeout(autoSubmitTimeout);
+      };
+    },
+    [
+      barcodeValue,
+      handleSearchProductByBarcode,
+      isProductModalOpen,
+      productsQuery.isLoading,
+    ],
+  );
 
   // Fecha o modal e limpa a seleção temporária do produto.
   function handleCloseProductModal() {

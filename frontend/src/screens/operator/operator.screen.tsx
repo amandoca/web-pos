@@ -131,6 +131,7 @@ export function OperatorScreen() {
                   <input
                     id="operator-barcode-input"
                     className="operator-barcode-input"
+                    autoFocus
                     type="text"
                     inputMode="numeric"
                     value={barcodeValue}
@@ -151,7 +152,7 @@ export function OperatorScreen() {
                 </div>
 
                 <p className="operator-barcode-hint">
-                  Aceita digitação manual ou leitor físico como teclado.
+                  Aceita digitação manual e leitor físico.
                 </p>
               </form>
             </header>

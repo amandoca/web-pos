@@ -5,7 +5,7 @@ function buildLoginHintMessage(hasFirebaseRoleConfiguration: boolean) {
     return "Defina os e-mails autorizados antes de liberar o acesso.";
   }
 
-  return "O acesso usa o cadastro do usuario e os e-mails autorizados servem como liberacao inicial.";
+  return "O acesso usa o cadastro do usuário e os e-mails autorizados servem como liberação inicial.";
 }
 
 // Controla os feedbacks e a acao principal da tela de login.

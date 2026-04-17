@@ -186,7 +186,7 @@ Preencha estes campos em cada documento:
     "updatedAt": "2026-04-09T00:00:00.000Z"
   },
   {
-    "id": 10, //ESSE É O PROXIMO
+    "id": 10,
     "categoryId": 6,
     "title": "Sopa de Cogumelos",
     "description": "leite evaporado, vinho marsala, caldo de carne, caldo de frango, manteiga",

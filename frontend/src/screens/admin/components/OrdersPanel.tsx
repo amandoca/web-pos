@@ -56,7 +56,7 @@ function OrderListItem({
         <div className="admin-order-title">
           <h3>Pedido #{order.id}</h3>
 
-          <div className="admin-order-meta">
+          <div className="admin-order-details">
             <span>
               Pagamento: {getPaymentMethodLabel(order.paymentMethodName)}
             </span>
@@ -88,7 +88,7 @@ function OrderListItem({
       </div>
 
       <div className="admin-order-footer">
-        <div className="admin-order-meta">
+        <div className="admin-order-details">
           <span>Subtotal: {formatCurrency(order.subtotal)}</span>
           <span>Taxa: {formatCurrency(order.fee)}</span>
           <strong>Total: {formatCurrency(order.total)}</strong>

@@ -47,7 +47,7 @@ export function CartItemCard({
         </p>
       ) : null}
 
-      <div className="operator-cart-item-meta">
+      <div className="operator-cart-item-pricing">
         <span>Unitário: {formatCurrency(item.unitPrice)}</span>
         <strong>{formatCurrency(item.totalPrice)}</strong>
       </div>

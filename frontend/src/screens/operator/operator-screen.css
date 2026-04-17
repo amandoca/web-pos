@@ -424,7 +424,7 @@
   line-height: 1.35;
 }
 
-.operator-product-meta {
+.operator-product-details {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -667,7 +667,7 @@
   line-height: 1.35;
 }
 
-.operator-cart-item-meta {
+.operator-cart-item-pricing {
   display: flex;
   justify-content: space-between;
   gap: 10px;

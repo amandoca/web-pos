@@ -34,7 +34,7 @@ export function ProductCard({ product, onSelectProduct }: ProductCardProps) {
           <p>{product.description}</p>
         </div>
 
-        <div className="operator-product-meta">
+        <div className="operator-product-details">
           <div className="operator-product-price">
             <strong>{formatCurrency(product.basePrice)}</strong>
             <span>

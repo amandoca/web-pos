@@ -697,7 +697,7 @@
 
 .admin-order-header,
 .admin-order-footer,
-.admin-order-meta {
+.admin-order-details {
   display: flex;
   justify-content: space-between;
   gap: 14px;
@@ -717,7 +717,7 @@
   font-size: 1.15rem;
 }
 
-.admin-order-meta {
+.admin-order-details {
   flex-wrap: wrap;
   color: #7d8795;
   font-size: 0.92rem;
@@ -891,7 +891,7 @@
   .admin-section-heading,
   .admin-order-header,
   .admin-order-footer,
-  .admin-order-meta,
+  .admin-order-details,
   .admin-dialog-actions {
     flex-direction: column;
     align-items: stretch;
